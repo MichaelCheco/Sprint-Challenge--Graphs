@@ -1,9 +1,18 @@
-from collections import deque, namedtuple
-from room import Room
-from player import Player
-from world import World
-
 import random
+from world import World
+from player import Player
+from room import Room
+from collections import deque, namedtuple
+0
+0 483 MichaelCheco/Sprint-Challenge--Graphs
+forked from LambdaSchool/Sprint-Challenge--Graphs
+Code  Pull requests 0  Projects 0  Wiki  Security  Insights  Settings
+Sprint-Challenge--Graphs/graph_adventure/adv.py
+@MichaelCheco MichaelCheco find route function
+a7ab016 4 hours ago
+@br80 @MichaelCheco
+66 lines(51 sloc)  21 KB
+
 
 # Load world
 world = World()
@@ -23,7 +32,7 @@ player = Player("Name", world.startingRoom)
 
 
 def find_route(player):
-    dir_reversed = {
+    direction_reversed = {
         'n': 's',
         'e': 'w',
         'w': 'e',
@@ -31,6 +40,28 @@ def find_route(player):
     }
     steps = []
     graph = {}
+
+    def move(direction):
+        # move in indicated direction
+        # add rooms to graph
+        # update rooms with data
+
+        # get players current room
+        prior_room = player.currentRoom
+
+        player.travel(direction)
+        steps.append(direction)
+
+        new_room = player.currentRoom
+
+        #  initialize graph with its information if the room is new
+        if graph.get(new_room.id) is None:
+            graph[new_room.id] = {}
+            for option in new_room.getExits():
+                graph[new_room.id][option] = '?'
+
+        graph[prior_room.id][direction] = new_room.id
+        graph[new_room.id][direction_reversed[direction]] = prior_room.id
 
 
 # FILL THIS IN
