@@ -22,6 +22,17 @@ world.printRooms()
 player = Player("Name", world.startingRoom)
 
 
+def find_route(player):
+    dir_reversed = {
+        'n': 's',
+        'e': 'w',
+        'w': 'e',
+        's': 'n'
+    }
+    steps = []
+    graph = {}
+
+
 # FILL THIS IN
 traversalPath = ['n', 's']
 
