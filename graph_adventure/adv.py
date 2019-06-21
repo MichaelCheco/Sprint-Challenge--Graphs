@@ -37,7 +37,7 @@ def find_route(player):
         # add rooms to graph
         # update rooms with data
 
-        # get players current room
+        # get players  in the current room
         prior_room = player.currentRoom
 
         player.travel(direction)
@@ -45,7 +45,7 @@ def find_route(player):
 
         new_room = player.currentRoom
 
-        #  initialize graph with its information if the room is new
+        #  create graph with the information if the room is new
         if graph.get(new_room.id) is None:
             graph[new_room.id] = {}
             for option in new_room.getExits():
@@ -53,6 +53,42 @@ def find_route(player):
 
         graph[prior_room.id][direction] = new_room.id
         graph[new_room.id][direction_reversed[direction]] = prior_room.id
+
+    def find_nearest_unvisited():
+        Step = namedtuple('Step', ['room', 'dir'])
+        q = deque()
+        visited = {}
+        q.appendleft(Step(room=player.currentRoom.id, dir=None))
+        found = False
+        while not found and q:
+            # grab from right side of Q
+            step = q.pop()
+            current_id = graph[step.room][step.dir] if step.dir else step.room
+            # only process if current room has not already been visited
+            if visited.get(current_id) is None:
+                # add this room to visited dict with value as the direction moved
+                # to get there
+                visited[current_id] = step
+                # add all movable directions from this room to queue
+                current = graph[current_id]
+                for opt in current:
+                    if current[opt] == '?':
+                        found = opt
+                        break
+                    else:
+                        q.appendleft(Step(room=current_id, dir=opt))
+        if found:
+            path = deque()
+            path.appendleft(found)
+            # the value for current will still be set from while loop
+            # loop back to the start
+            room, dir = visited[current_id]
+            while dir is not None:
+                path.appendleft(dir)
+                room, dir = visited[room]
+            return path
+        else:
+            return None
 
 
 # FILL THIS IN
